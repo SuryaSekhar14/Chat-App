@@ -15,5 +15,7 @@ class Client:
 
         msg = tkinter.Tk()
         msg.withdraw()
-        
 
+        self.nickname = simpledialog.askstring("Nickname", "Please choose a Nickname", parent=msg)
+
+        
