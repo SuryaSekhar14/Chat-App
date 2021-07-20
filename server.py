@@ -20,6 +20,7 @@ def broadcast(message):
 
 #handle connections
 def handle():
+    
 
 #recieve new connections
 def recieve():
