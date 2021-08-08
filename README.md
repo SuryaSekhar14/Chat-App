@@ -9,4 +9,3 @@ python3 -u test.py
 
 ```
 
-<img src="https://whimsical.com/embed/R7bcuTRAQurAisZadvf67K">
