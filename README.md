@@ -9,4 +9,4 @@ python3 -u test.py
 
 ```
 
-<iframe style="border:none" width="800" height="450" src="https://whimsical.com/embed/R7bcuTRAQurAisZadvf67K"></iframe>
+<img src="https://whimsical.com/embed/R7bcuTRAQurAisZadvf67K">
