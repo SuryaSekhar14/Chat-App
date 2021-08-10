@@ -1,0 +1,4 @@
+rsa==4.7.2
+requests==2.22.0
+pycryptodome==3.10.1
+secrets==1.0.2
