@@ -1,60 +1,66 @@
 import socket
 import threading
 
-HOST = '127.0.0.1'  #replace with server ip if over internet
-PORT= 9090
+# Connection Data
+host = '127.0.0.1'
+port = 55553
 
-
+# Starting Server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST, PORT))
-
+server.bind((host, port))
 server.listen()
 
+# Lists For Clients and Their Nicknames
 clients = []
 nicknames = []
 
-#broadcast chats
+# Sending Messages To All Connected Clients
 def broadcast(message):
     for client in clients:
-        client.send(message) 
+        client.send(message)
 
-#handle connections
+# Handling Messages From Clients
 def handle(client):
     while True:
         try:
+            # Broadcasting Messages
             message = client.recv(1024)
-            print(f'{nicknames[client.index(client)]} says {message}')
             broadcast(message)
         except:
-            index=clients.index(client)
+            # Removing And Closing Clients
+            index = clients.index(client)
             clients.remove(client)
             client.close()
             nickname = nicknames[index]
+            broadcast('{} left!'.format(nickname).encode('ascii'))
             nicknames.remove(nickname)
             break
 
-#recieve new connections
-def recieve():
+# Receiving / Listening Function
+def receive():
     while True:
+        # Accept Connection
         client, address = server.accept()
-        print(f'Connected with {str(address)}')
+        print("Connected with {}".format(str(address)))
 
-        client.send("NICK".encode('utf-8'))
-        nickname = clients.recv(1024)
-
+        # Request And Store Nickname
+        client.send('NICK'.encode('ascii'))
+        nickname = client.recv(1024).decode('ascii')
         nicknames.append(nickname)
         clients.append(client)
 
-        print(f"Nickname of the clienr is {nickname}")
-        broadcast(f'{nickname} connecte to the server\n'.encode('utf-8'))
+        # Print And Broadcast Nickname
+        print("Nickname is {}".format(nickname))
+        broadcast("{} joined!".format(nickname).encode('ascii'))
+        client.send('Connected to server!'.encode('ascii'))
 
-        client.send("Connected to the server".encode('utf-8'))
-
+        # Start Handling Thread For Client
         thread = threading.Thread(target=handle, args=(client,))
         thread.start()
 
-print("Server running...")
-recieve()
+print("Server is listening...")
+receive()
+
 
 
 

@@ -1,21 +1,41 @@
 import socket
 import threading
-import tkinter
-import tkinter.scrolledtext
-from tkinter import simpledialog
 
-HOST = '127.0.0.1'
-PORT = 9090
+# Choosing Nickname
+nickname = input("Choose your nickname: ")
 
-class Client:
+# Connecting To Server
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(('127.0.0.1', 55553))
 
-    def __init__(self, host, port):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((host, port))
+# Listening to Server and Sending Nickname
+def receive():
+    while True:
+        try:
+            # Receive Message From Server
+            # If 'NICK' Send Nickname
+            message = client.recv(1024).decode('ascii')
+            if message == 'NICK':
+                client.send(nickname.encode('ascii'))
+            else:
+                print(message)
+        except:
+            # Close Connection When Error
+            print("An error occured!")
+            client.close()
+            break
 
-        msg = tkinter.Tk()
-        msg.withdraw()
+# Sending Messages To Server
+def write():
+    while True:
+        message = '{}: {}'.format(nickname, input(''))
+        client.send(message.encode('ascii'))
 
-        self.nickname = simpledialog.askstring("Nickname", "Please choose a Nickname", parent=msg)
+# Starting Threads For Listening And Writing
+receive_thread = threading.Thread(target=receive)
+receive_thread.start()
+
+write_thread = threading.Thread(target=write)
+write_thread.start()
 
         
